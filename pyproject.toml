@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "Cython", "wheel"]
+build-backend = "setuptoos.build_meta"
+
+[project]
+name = "syphon"
+version = "0.0.1"
+authors = ["Xavier C. Gill"]
+requires-python = ">=3.9"
+dependencies = [
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+PDF = ["pytest", "DEV"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
