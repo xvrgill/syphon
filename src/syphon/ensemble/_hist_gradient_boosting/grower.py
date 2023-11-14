@@ -303,19 +303,48 @@ class TreeGrower:
                 smallest_child = right_child_node
                 largest_child = right_child_node
 
-        # Create histograms
-        # Brute force for smallest child
-        # Subtraction for largest child
-        # Also time the histogram computation
-        start = time()
-        # noinspection PyUnboundLocalVariable
-        smallest_child.histograms = self.histogram_builder.compute_histograms_brute_force(
-            smallest_child.sample_indices
-        )
-        # TODO: Add subtraction method once it's created
-        # noinspection PyUnboundLocalVariable
-        largest_child.histograms = ...
+            # Create histograms
+            # Brute force for smallest child
+            # Subtraction for largest child
+            # Also time the histogram computation
+            start = time()
+            # noinspection PyUnboundLocalVariable
+            smallest_child.histograms = self.histogram_builder.compute_histograms_brute_force(
+                smallest_child.sample_indices,
+                # smallest_child.allowed_features # <-- Need this if interactions are used
+            )
+            # TODO: Add subtraction method once it's created
+            # noinspection PyUnboundLocalVariable
+            largest_child.histograms = self.histogram_builder.compute_histograms_subtraction(
+                node.histograms,
+                smallest_child.histograms,
+                # allowed_features=None # <-- use this for interactions
+            )
+            stop = time()
+            self.time_spent_computing_histograms += stop - start
 
+            # Find best split for children and push to heap
+            # Need to do this here so that we know if the children can be split
+            # The growth loop stops when there are no more splittable nodes
+            # This condition is met when no other items exist on heap
+            start = time()
+            if should_split_left:
+                self._find_best_split(left_child_node)
+            if should_split_right:
+                self._find_best_split(right_child_node)
+            stop = time()
+            self.time_spent_finding_splits += stop - start
+
+            # Release memory used by histograms when the node is a leaf
+            for child in (left_child_node, right_child_node):
+                if child.is_leaf:
+                    del child.histograms
+
+        # Release memory used by histograms as they are no longer needed for
+        # internal nodes once children histograms have been computed.
+        del node.histograms
+
+        return left_child_node, right_child_node
 
     def _finalize_leaf(self, node):
         """Turn node into a leaf node.

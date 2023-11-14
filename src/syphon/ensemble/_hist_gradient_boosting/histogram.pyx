@@ -187,8 +187,6 @@ cdef class HistogramBuilder:
                     histograms
                 )
 
-
-
     def compute_histograms_subtraction(
             HistogramBuilder self,
             hist_struct [:, ::1] parent_histograms,
