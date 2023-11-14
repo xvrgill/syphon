@@ -747,4 +747,12 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
+### Syphon ###
+
+# Package C files
+src/syphon/**/*.c
+
+# All jetbrans files
+.idea/
+
 # End of https://www.toptal.com/developers/gitignore/api/c,python,visualstudiocode,jetbrains,visualstudio

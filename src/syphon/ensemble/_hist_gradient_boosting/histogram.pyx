@@ -2,6 +2,7 @@
 Module that contains logic for building histograms from binned feature values.
 """
 import cython
+# noinspection PyUnresolvedReferences
 from cython.parallel import prange
 import numpy as np
 
@@ -112,7 +113,7 @@ cdef class HistogramBuilder:
             const int feature_idx,
             const unsigned int [::1] sample_indices,
             hist_struct [:, ::1] histograms
-    ) noexcept nogil:
+    ) nogil:
         """Calculate histogram for a single feature.
         
         Parameters
@@ -250,7 +251,7 @@ cpdef void _subtract_histograms(
         hist_struct [:, ::1] hist_a,
         hist_struct [:, ::1] hist_b,
         hist_struct [:, ::1] out
-) noexcept nogil:
+) nogil:
     """Compute the difference between two histograms.
 
     Used to subtract a child histogram from its parent. The result is the
@@ -288,7 +289,7 @@ cpdef void _build_histogram_root(
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] all_gradients,
         const FLOAT64_DTYPE_C [::1] all_hessians,
-        hist_struct [:, ::1] out) noexcept nogil:
+        hist_struct [:, ::1] out) nogil:
     """Build histogram for a feature at root node.
 
     Use all instances to calculate this.
@@ -352,7 +353,7 @@ cpdef void _build_histogram_root_no_hessian(
         const int feature_idx,
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] all_gradients,
-        hist_struct [:, ::1] out) noexcept nogil:
+        hist_struct [:, ::1] out) nogil:
     """Build histogram from a feature without hessians.
 
     Parameters
@@ -400,7 +401,7 @@ cpdef void _build_histogram(
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] ordered_gradients,
         const FLOAT64_DTYPE_C [::1] ordered_hessians,
-        hist_struct [:, ::1] out) noexcept nogil:
+        hist_struct [:, ::1] out) nogil:
     """Create a histogram for a feature"""
     cdef:
         int i = 0
@@ -449,12 +450,12 @@ cpdef void _build_histogram(
         out[feature_idx, bin_idx].sum_hessians += ordered_hessians[i]
         out[feature_idx, bin_idx].count += 1
 
-cdef void _build_histogram_no_hessian(
+cpdef void _build_histogram_no_hessian(
         const int feature_idx,
         const unsigned int [::1] sample_indices,
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] ordered_gradients,
-        hist_struct [:, ::1] out) noexcept nogil:
+        hist_struct [:, ::1] out) nogil:
     """Build histogram for feature without using hessians.
 
     Parameters
