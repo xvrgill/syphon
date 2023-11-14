@@ -113,7 +113,7 @@ cdef class HistogramBuilder:
             const int feature_idx,
             const unsigned int [::1] sample_indices,
             hist_struct [:, ::1] histograms
-    ) nogil:
+    ) noexcept nogil:
         """Calculate histogram for a single feature.
         
         Parameters
@@ -250,8 +250,7 @@ cpdef void _subtract_histograms(
         unsigned int n_bins,
         hist_struct [:, ::1] hist_a,
         hist_struct [:, ::1] hist_b,
-        hist_struct [:, ::1] out
-) nogil:
+        hist_struct [:, ::1] out) noexcept nogil:
     """Compute the difference between two histograms.
 
     Used to subtract a child histogram from its parent. The result is the
@@ -289,7 +288,7 @@ cpdef void _build_histogram_root(
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] all_gradients,
         const FLOAT64_DTYPE_C [::1] all_hessians,
-        hist_struct [:, ::1] out) nogil:
+        hist_struct [:, ::1] out) noexcept nogil:
     """Build histogram for a feature at root node.
 
     Use all instances to calculate this.
@@ -353,7 +352,7 @@ cpdef void _build_histogram_root_no_hessian(
         const int feature_idx,
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] all_gradients,
-        hist_struct [:, ::1] out) nogil:
+        hist_struct [:, ::1] out) noexcept nogil:
     """Build histogram from a feature without hessians.
 
     Parameters
@@ -401,7 +400,7 @@ cpdef void _build_histogram(
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] ordered_gradients,
         const FLOAT64_DTYPE_C [::1] ordered_hessians,
-        hist_struct [:, ::1] out) nogil:
+        hist_struct [:, ::1] out) noexcept nogil:
     """Create a histogram for a feature"""
     cdef:
         int i = 0
@@ -455,7 +454,7 @@ cpdef void _build_histogram_no_hessian(
         const unsigned int [::1] sample_indices,
         const UINT8_DTYPE_C [::1] binned_feature,
         const FLOAT64_DTYPE_C [::1] ordered_gradients,
-        hist_struct [:, ::1] out) nogil:
+        hist_struct [:, ::1] out) noexcept nogil:
     """Build histogram for feature without using hessians.
 
     Parameters
